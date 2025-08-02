@@ -1,19 +1,15 @@
-# E-commerce Flask Project Skeleton
+# E-commerce Flask Project
 
-## Estructura
+## Estructura inicial
 
 ```
 ecommerce/
 │
 ├── run.py
 ├── config.py
-├── requirements.txt
-├── .gitignore
 │
 ├── models/
-│   ├── __init__.py
-│   ├── user.py
-│   └── product.py
+│   └── __init__.py
 │
 ├── auth/
 │   └── routes.py
@@ -36,23 +32,13 @@ ecommerce/
     └── img/
 ```
 
-## Características incluidas
+## Siguiente paso
 
-- Login para admin y cliente.
-- Carpetas separadas para rutas y módulos.
-- Conexión a MySQL con SQLAlchemy.
-- Sistema de autenticación con hash de contraseñas.
-- Blueprints para separar lógicas.
-- Bootstrap/Tailwind listo para incorporar en `/static`.
-
-## Configuración rápida
-
-1. Instala las dependencias:
+1. Instala dependencias:  
    ```
-   pip install -r requirements.txt
+   pip install Flask Flask-SQLAlchemy Flask-Login PyMySQL
    ```
 2. Configura tu base de datos en `config.py`.
-3. Ejecuta la app:
-   ```
-   python run.py
-   ```
+3. Ejecuta la app con `python run.py`.
+
+---

@@ -12,7 +12,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
-    # Blueprints
+    # Importar y registrar blueprints
     from auth.routes import auth_bp
     from admin.routes import admin_bp
     from shop.routes import shop_bp
