@@ -1,44 +1,20 @@
 # E-commerce Flask Project
 
-## Estructura inicial
+## Cambios en la etapa 2
 
-```
-ecommerce/
-│
-├── run.py
-├── config.py
-│
-├── models/
-│   └── __init__.py
-│
-├── auth/
-│   └── routes.py
-├── admin/
-│   └── routes.py
-├── shop/
-│   └── routes.py
-├── api/
-│   └── routes.py
-│
-├── templates/
-│   ├── base.html
-│   ├── auth/
-│   ├── admin/
-│   └── shop/
-│
-└── static/
-    ├── css/
-    ├── js/
-    └── img/
-```
+- Se añadió el modelo `User` en `/models/user.py` con roles y métodos de autenticación.
+- Se integró Flask-Login en el inicio de la app (`run.py`) y se agregó la función `user_loader`.
+- El sistema soporta dos tipos de usuarios: `admin` y `cliente`.
+- Listo para avanzar con autenticación y gestión de usuarios.
 
 ## Siguiente paso
 
-1. Instala dependencias:  
+Para crear la tabla de usuarios en MySQL:
+
+1. Ejecuta la app una vez para que SQLAlchemy cree las tablas:
    ```
-   pip install Flask Flask-SQLAlchemy Flask-Login PyMySQL
+   python run.py
    ```
-2. Configura tu base de datos en `config.py`.
-3. Ejecuta la app con `python run.py`.
+2. Verifica la tabla `users` en tu base de datos.
 
 ---

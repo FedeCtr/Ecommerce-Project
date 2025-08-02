@@ -23,6 +23,18 @@ def create_app():
     app.register_blueprint(shop_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    # Importar modelos aquí si es necesario (por ejemplo, para migraciones)
+    with app.app_context():
+        from models import User
+        db.create_all()
+
+    # Flask-Login: función para cargar usuario
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    login_manager.login_view = 'auth.login'  # Redirige a login si no autenticado
+
     return app
 
 if __name__ == '__main__':
