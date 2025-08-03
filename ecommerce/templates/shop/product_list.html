@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Tienda</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if product.image_url %}
+                <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text fw-bold">${{ "%.2f"|format(product.price) }}</p>
+                    <a href="{{ url_for('shop.product_detail', product_id=product.id) }}" class="btn btn-outline-primary btn-sm">Ver detalle</a>
+                    <form action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm">Agregar al carrito</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

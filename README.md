@@ -114,3 +114,11 @@ ecommerce/
 - Estética visual final y responsive
 
 ---
+### Etapa 5: Listado y compra de productos para el cliente
+
+- Rutas y vistas para que los clientes puedan ver el listado de productos y el detalle de cada uno.
+- Opción para agregar productos al carrito (carrito básico en sesión).
+- Interfaz rápida y minimalista usando Bootstrap.
+- Solo usuarios autenticados pueden agregar productos al carrito.
+
+---
