@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Listado de Productos</h2>
+    <a href="{{ url_for('admin.product_create') }}" class="btn btn-primary mb-3">Crear nuevo producto</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>${{ "%.2f"|format(product.price) }}</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="Imagen" style="height:50px;">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('admin.product_edit', product_id=product.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                    <form action="{{ url_for('admin.product_delete', product_id=product.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que quieres eliminar este producto?')">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
