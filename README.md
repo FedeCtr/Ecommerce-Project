@@ -1,20 +1,20 @@
-# E-commerce Flask Project
+# Etapa 3: Sistema de autenticación
 
-## Cambios en la etapa 2
+## Cambios realizados
 
-- Se añadió el modelo `User` en `/models/user.py` con roles y métodos de autenticación.
-- Se integró Flask-Login en el inicio de la app (`run.py`) y se agregó la función `user_loader`.
-- El sistema soporta dos tipos de usuarios: `admin` y `cliente`.
-- Listo para avanzar con autenticación y gestión de usuarios.
+- Rutas para login, registro y logout en `auth/routes.py`
+- Plantillas para login y registro en `templates/auth/`
+- Uso de hash de contraseñas y roles
+- Mensajes flash para feedback
+- Integración con Bootstrap (mínimo y responsive)
 
 ## Siguiente paso
 
-Para crear la tabla de usuarios en MySQL:
+1. Ejecuta la app y prueba los formularios de login y registro.
+2. Verifica que se pueden registrar usuarios y luego iniciar sesión.
+3. El sistema de autenticación está listo para conectar con el resto de la app.
 
-1. Ejecuta la app una vez para que SQLAlchemy cree las tablas:
-   ```
-   python run.py
-   ```
-2. Verifica la tabla `users` en tu base de datos.
+**Commit sugerido:**  
+`feat: sistema de autenticación (login, registro, logout)`
 
 ---
