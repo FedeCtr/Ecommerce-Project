@@ -139,3 +139,11 @@ ecommerce/
 - Carrito se vacía al finalizar compra.
 
 ---
+### Etapa 8: Dashboard del administrador
+
+- Panel con estadísticas de ventas totales y mensuales.
+- Órdenes recientes y productos más vendidos.
+- Cantidad de usuarios registrados.
+- Acceso solo para el rol admin.
+
+---

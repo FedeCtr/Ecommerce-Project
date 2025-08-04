@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
-from models import Product
+from models import User, Product, Order, OrderItem
 from run import db
+from sqlalchemy import func, desc
+import datetime
 
 admin_bp = Blueprint('admin', __name__, template_folder='../templates/admin')
 
@@ -15,52 +17,33 @@ def admin_required(func):
         return func(*args, **kwargs)
     return decorated_view
 
-@admin_bp.route('/admin/products')
+@admin_bp.route('/admin/dashboard')
 @login_required
 @admin_required
-def product_list():
-    products = Product.query.all()
-    return render_template('admin/product_list.html', products=products)
+def dashboard():
+    # Ventas totales
+    total_sales = db.session.query(func.sum(Order.total)).scalar() or 0
 
-@admin_bp.route('/admin/products/create', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def product_create():
-    if request.method == 'POST':
-        name = request.form['name']
-        description = request.form['description']
-        price = float(request.form['price'])
-        stock = int(request.form['stock'])
-        image_url = request.form['image_url']
-        product = Product(name=name, description=description, price=price, stock=stock, image_url=image_url)
-        db.session.add(product)
-        db.session.commit()
-        flash('Producto creado correctamente.', 'success')
-        return redirect(url_for('admin.product_list'))
-    return render_template('admin/product_form.html', product=None)
+    # Ventas del mes
+    first_day = datetime.date.today().replace(day=1)
+    monthly_sales = db.session.query(func.sum(Order.total)).filter(Order.created_at >= first_day).scalar() or 0
 
-@admin_bp.route('/admin/products/<int:product_id>/edit', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def product_edit(product_id):
-    product = Product.query.get_or_404(product_id)
-    if request.method == 'POST':
-        product.name = request.form['name']
-        product.description = request.form['description']
-        product.price = float(request.form['price'])
-        product.stock = int(request.form['stock'])
-        product.image_url = request.form['image_url']
-        db.session.commit()
-        flash('Producto actualizado correctamente.', 'success')
-        return redirect(url_for('admin.product_list'))
-    return render_template('admin/product_form.html', product=product)
+    # Órdenes recientes
+    recent_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
 
-@admin_bp.route('/admin/products/<int:product_id>/delete', methods=['POST'])
-@login_required
-@admin_required
-def product_delete(product_id):
-    product = Product.query.get_or_404(product_id)
-    db.session.delete(product)
-    db.session.commit()
-    flash('Producto eliminado correctamente.', 'success')
-    return redirect(url_for('admin.product_list'))
+    # Productos más vendidos
+    top_products = db.session.query(
+        Product.name,
+        func.sum(OrderItem.quantity).label('total_qty')
+    ).join(OrderItem).group_by(Product.id).order_by(desc('total_qty')).limit(5).all()
+
+    # Usuarios registrados
+    user_count = User.query.count()
+
+    return render_template('admin/dashboard.html',
+        total_sales=total_sales,
+        monthly_sales=monthly_sales,
+        recent_orders=recent_orders,
+        top_products=top_products,
+        user_count=user_count
+    )
