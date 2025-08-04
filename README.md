@@ -130,3 +130,12 @@ ecommerce/
 - Plantilla intuitiva y responsive con Bootstrap.
 
 ---
+### Etapa 7: Checkout y registro de órdenes
+
+- Modelos `Order` y `OrderItem` para almacenar órdenes y productos comprados.
+- Ruta `/shop/cart/checkout` para confirmar y finalizar la compra.
+- Detalle de orden accesible por el cliente.
+- Stock de productos reducido al comprar.
+- Carrito se vacía al finalizar compra.
+
+---

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Detalle de tu compra</h2>
+    <p>Fecha: {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in order.items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>${{ "%.2f"|format(item.price) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ "%.2f"|format(item.price * item.quantity) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <h4 class="text-end">Total: ${{ "%.2f"|format(order.total) }}</h4>
+    <a href="{{ url_for('shop.product_list') }}" class="btn btn-primary">Volver a la tienda</a>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Confirmar compra</h2>
+    <form method="POST">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>${{ "%.2f"|format(item.product.price) }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ "%.2f"|format(item.subtotal) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h4 class="text-end">Total: ${{ "%.2f"|format(total) }}</h4>
+        <button type="submit" class="btn btn-success">Finalizar compra</button>
+        <a href="{{ url_for('shop.cart') }}" class="btn btn-secondary">Volver al carrito</a>
+    </form>
+</div>
+{% endblock %}

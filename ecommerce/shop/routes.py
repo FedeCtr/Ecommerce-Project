@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_login import login_required, current_user
-from models import Product
+from models import Product, Order, OrderItem
+from run import db
 
 shop_bp = Blueprint('shop', __name__, template_folder='../templates/shop')
 
-# ... (product_list, product_detail, add_to_cart ya implementados antes)
+# ... (otras rutas previas)
 
-@shop_bp.route('/shop/cart')
+@shop_bp.route('/shop/cart/checkout', methods=['GET', 'POST'])
 @login_required
-def cart():
+def checkout():
     cart = session.get('cart', {})
     items = []
     total = 0
@@ -22,26 +23,31 @@ def cart():
                 'subtotal': subtotal
             })
             total += subtotal
-    return render_template('shop/cart.html', items=items, total=total)
 
-@shop_bp.route('/shop/cart/update/<int:product_id>', methods=['POST'])
-@login_required
-def update_cart(product_id):
-    quantity = int(request.form.get('quantity', 1))
-    cart = session.get('cart', {})
-    if quantity > 0:
-        cart[str(product_id)] = quantity
-    else:
-        cart.pop(str(product_id), None)
-    session['cart'] = cart
-    flash('Carrito actualizado.', 'success')
-    return redirect(url_for('shop.cart'))
+    if request.method == 'POST':
+        # Crear orden y sus items
+        order = Order(user_id=current_user.id, total=total)
+        db.session.add(order)
+        db.session.flush()  # Para obtener el order.id antes de commit
+        for item in items:
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=item['product'].id,
+                quantity=item['quantity'],
+                price=item['product'].price
+            )
+            db.session.add(order_item)
+            # Opcional: reducir stock
+            item['product'].stock -= item['quantity']
+        db.session.commit()
+        session['cart'] = {}  # Vaciar carrito
+        flash('¡Compra realizada con éxito!', 'success')
+        return redirect(url_for('shop.order_detail', order_id=order.id))
 
-@shop_bp.route('/shop/cart/remove/<int:product_id>', methods=['POST'])
+    return render_template('shop/checkout.html', items=items, total=total)
+
+@shop_bp.route('/shop/order/<int:order_id>')
 @login_required
-def remove_from_cart(product_id):
-    cart = session.get('cart', {})
-    cart.pop(str(product_id), None)
-    session['cart'] = cart
-    flash('Producto eliminado del carrito.', 'success')
-    return redirect(url_for('shop.cart'))
+def order_detail(order_id):
+    order = Order.query.get_or_404(order_id)
+    return render_template('shop/order_detail.html', order=order)
