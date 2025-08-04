@@ -4,22 +4,44 @@ from models import Product
 
 shop_bp = Blueprint('shop', __name__, template_folder='../templates/shop')
 
-@shop_bp.route('/shop')
-def product_list():
-    products = Product.query.all()
-    return render_template('shop/product_list.html', products=products)
+# ... (product_list, product_detail, add_to_cart ya implementados antes)
 
-@shop_bp.route('/shop/product/<int:product_id>')
-def product_detail(product_id):
-    product = Product.query.get_or_404(product_id)
-    return render_template('shop/product_detail.html', product=product)
-
-@shop_bp.route('/shop/cart/add/<int:product_id>', methods=['POST'])
+@shop_bp.route('/shop/cart')
 @login_required
-def add_to_cart(product_id):
-    product = Product.query.get_or_404(product_id)
+def cart():
     cart = session.get('cart', {})
-    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
+    items = []
+    total = 0
+    for product_id, quantity in cart.items():
+        product = Product.query.get(int(product_id))
+        if product:
+            subtotal = product.price * quantity
+            items.append({
+                'product': product,
+                'quantity': quantity,
+                'subtotal': subtotal
+            })
+            total += subtotal
+    return render_template('shop/cart.html', items=items, total=total)
+
+@shop_bp.route('/shop/cart/update/<int:product_id>', methods=['POST'])
+@login_required
+def update_cart(product_id):
+    quantity = int(request.form.get('quantity', 1))
+    cart = session.get('cart', {})
+    if quantity > 0:
+        cart[str(product_id)] = quantity
+    else:
+        cart.pop(str(product_id), None)
     session['cart'] = cart
-    flash(f'{product.name} agregado al carrito.', 'success')
-    return redirect(url_for('shop.product_list'))
+    flash('Carrito actualizado.', 'success')
+    return redirect(url_for('shop.cart'))
+
+@shop_bp.route('/shop/cart/remove/<int:product_id>', methods=['POST'])
+@login_required
+def remove_from_cart(product_id):
+    cart = session.get('cart', {})
+    cart.pop(str(product_id), None)
+    session['cart'] = cart
+    flash('Producto eliminado del carrito.', 'success')
+    return redirect(url_for('shop.cart'))

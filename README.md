@@ -122,3 +122,11 @@ ecommerce/
 - Solo usuarios autenticados pueden agregar productos al carrito.
 
 ---
+### Etapa 6: Carrito de compras
+
+- Visualización del carrito, edición de cantidades y eliminación de productos.
+- Cálculo automático del total a pagar.
+- El carrito se almacena en la sesión (por usuario).
+- Plantilla intuitiva y responsive con Bootstrap.
+
+---
