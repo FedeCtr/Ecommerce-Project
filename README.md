@@ -147,3 +147,12 @@ ecommerce/
 - Acceso solo para el rol admin.
 
 ---
+### Etapa 9: API RESTful
+
+- Endpoints JSON para productos, órdenes y usuarios.
+- Permisos: solo admin puede crear/editar/eliminar productos y ver usuarios.
+- Clientes pueden consultar productos y crear órdenes.
+- Protege rutas con `login_required` y control de roles.
+- Respuestas limpias y pensadas para integración con apps externas o Thunder Client/Postman.
+
+---

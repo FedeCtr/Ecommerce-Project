@@ -21,11 +21,11 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(shop_bp)
-    app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(api_bp)  # El url_prefix /api ya está en el blueprint
 
     # Importar modelos aquí si es necesario (por ejemplo, para migraciones)
     with app.app_context():
-        from models import User
+        from models import User, Product, Order, OrderItem
         db.create_all()
 
     # Flask-Login: función para cargar usuario
